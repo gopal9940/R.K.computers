@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Dashboard — R. K. Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23A63BFF'/%3E%3Ctext x='50' y='66' font-size='40' font-family='Arial,sans-serif' font-weight='800' fill='white' text-anchor='middle'%3ERK%3C/text%3E%3C/svg%3E">
+<style id="authGate">html{visibility:hidden}</style>
+<script>(function(){try{var s=JSON.parse(sessionStorage.getItem('rk_admin_session')||'null');if(!s||s.until<Date.now()){location.replace('admin-login.html?next='+encodeURIComponent(location.pathname.split('/').pop()||'admin.html'));}}catch(e){location.replace('admin-login.html');}})();</script>
+
+<style>:root{
+  --bg:#070B20; --side:#0A1030; --panel:#0D1436; --panel2:#111A44; --line:#1D2858; --line2:#2A3770;
+  --text:#F5F7FF; --muted:#8A94C4; --dim:#5F6A9E;
+  --primary:#C03CFF; --primary2:#8B3DFF; --cyan:#1CC8F5; --green:#34D399; --red:#FF6B81; --amber:#FFB547;
+  --radius:12px;
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+html{max-width:100%; overflow-x:hidden;}
+body{
+  max-width:100%; overflow-x:clip; background:var(--bg); color:var(--text);
+  font-family:'Inter',system-ui,sans-serif; font-size:14px; line-height:1.5; -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,.a-title,.kpi-value,.panel-value,.a-logo-text{font-family:'Sora','Inter',sans-serif;}
+a{color:inherit; text-decoration:none;}
+button{font-family:inherit; cursor:pointer;}
+img{max-width:100%; display:block;}
+::-webkit-scrollbar{width:10px; height:10px;}
+::-webkit-scrollbar-thumb{background:var(--line2); border-radius:10px;}
+::-webkit-scrollbar-track{background:transparent;}
+
+/* ===== Shell ===== */
+.admin-shell{display:grid; grid-template-columns:264px minmax(0,1fr); min-height:100vh;}
+.sidebar{
+  position:sticky; top:0; height:100vh; overflow-y:auto; background:var(--side); border-right:1px solid var(--line);
+  padding:24px 18px; display:flex; flex-direction:column; gap:6px;
+}
+.a-logo{display:flex; align-items:center; gap:10px; padding:2px 8px 18px;}
+.a-mark{
+  width:34px; height:34px; border-radius:10px; display:flex; align-items:center; justify-content:center;
+  background:linear-gradient(135deg,var(--primary),#4B6BFF); font-weight:800; font-size:12px; color:#fff; letter-spacing:-.3px;
+}
+.a-logo-text{font-size:18px; font-weight:600;}
+.side-search{
+  display:flex; align-items:center; gap:9px; background:var(--panel); border:1px solid var(--line); border-radius:8px;
+  padding:10px 12px; margin:0 0 14px; color:var(--muted);
+}
+.side-search svg{width:16px; height:16px; flex-shrink:0;}
+.side-search input{background:none; border:none; outline:none; color:var(--text); font-size:13px; width:100%; font-family:inherit;}
+.side-nav{display:flex; flex-direction:column; gap:2px;}
+.side-link{
+  display:flex; align-items:center; gap:12px; padding:11px 12px; border-radius:8px; color:var(--muted);
+  font-size:14px; font-weight:500; border-left:2px solid transparent; transition:.12s;
+}
+.side-link svg{width:18px; height:18px; flex-shrink:0;}
+.side-link:hover{color:var(--text); background:rgba(255,255,255,.03);}
+.side-link.active{color:#fff; background:rgba(192,60,255,.12); border-left-color:var(--primary);}
+.side-link.active svg{color:var(--primary);}
+.side-sep{height:1px; background:var(--line); margin:14px 0;}
+.side-user{
+  margin-top:auto; display:flex; align-items:center; gap:10px; padding:14px 8px 4px; border-top:1px solid var(--line);
+}
+.avatar{
+  width:36px; height:36px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center;
+  background:linear-gradient(135deg,#F59E0B,#EF4444); font-weight:700; font-size:12px; color:#fff;
+}
+.su-name{font-size:13px; font-weight:600; line-height:1.2;}
+.su-sub{font-size:11.5px; color:var(--muted);}
+.su-sub:hover{color:var(--text);}
+.icon-btn{
+  margin-left:auto; width:34px; height:34px; border-radius:8px; border:1px solid var(--line); background:var(--panel);
+  color:var(--muted); display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.icon-btn:hover{color:var(--text); border-color:var(--line2);}
+.icon-btn svg{width:16px; height:16px;}
+
+.a-main{min-width:0; display:flex; flex-direction:column;}
+.a-top{
+  display:flex; align-items:center; gap:16px; padding:26px 32px 6px; flex-wrap:wrap;
+}
+.menu-btn{
+  display:none; width:38px; height:38px; border-radius:8px; border:1px solid var(--line); background:var(--panel);
+  color:var(--text); font-size:18px; align-items:center; justify-content:center;
+}
+.a-title{font-size:22px; font-weight:600; line-height:1.25;}
+.a-sub{font-size:12.5px; color:var(--muted); margin-top:2px;}
+.a-actions{margin-left:auto; display:flex; align-items:center; gap:12px; flex-wrap:wrap;}
+.a-content{padding:20px 32px 48px; display:flex; flex-direction:column; gap:20px; min-width:0;}
+
+/* ===== Buttons / forms ===== */
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:9px 16px; border-radius:6px;
+  font-size:13px; font-weight:600; border:1px solid transparent; white-space:nowrap; transition:.12s;
+}
+.btn.primary{background:linear-gradient(135deg,var(--primary),var(--primary2)); color:#fff;}
+.btn.primary:hover{filter:brightness(1.1);}
+.btn.ghost{background:transparent; color:var(--text); border-color:transparent;}
+.btn.ghost:hover{color:var(--primary);}
+.btn.outline{background:var(--panel); color:var(--text); border-color:var(--line2);}
+.btn.outline:hover{border-color:var(--primary);}
+.btn.danger{background:rgba(255,107,129,.12); color:var(--red); border-color:rgba(255,107,129,.35);}
+.btn.danger:hover{background:rgba(255,107,129,.2);}
+.btn.sm{padding:6px 11px; font-size:12px;}
+.btn:disabled{opacity:.5; cursor:not-allowed;}
+.field{display:flex; flex-direction:column; gap:6px; margin-bottom:14px;}
+.field label{font-size:12px; font-weight:600; color:var(--muted);}
+.field .hint{font-size:11.5px; color:var(--dim);}
+.field .err{font-size:11.5px; color:var(--red);}
+input.in, select.in, textarea.in{
+  width:100%; background:var(--bg); border:1px solid var(--line2); border-radius:8px; color:var(--text);
+  padding:10px 12px; font-size:13.5px; font-family:inherit; outline:none;
+}
+input.in:focus, select.in:focus, textarea.in:focus{border-color:var(--primary); box-shadow:0 0 0 3px rgba(192,60,255,.18);}
+input.in.bad, select.in.bad{border-color:var(--red);}
+textarea.in{min-height:80px; resize:vertical;}
+select.in{appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238A94C4' stroke-width='1.6' fill='none'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 12px center; padding-right:32px;}
+select.in option{background:var(--panel); color:var(--text);}
+.row2{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+.row3{display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
+
+/* ===== Panels / KPI ===== */
+.panel{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:20px; min-width:0;}
+.panel h3{font-size:15px; font-weight:600;}
+.panel-head{display:flex; align-items:flex-start; justify-content:space-between; gap:14px; flex-wrap:wrap; margin-bottom:12px;}
+.panel-head a{font-size:12.5px; color:var(--primary);}
+.panel-label{display:flex; align-items:center; gap:7px; font-size:12.5px; color:var(--muted);}
+.panel-label svg{width:14px; height:14px;}
+.panel-value{font-size:24px; font-weight:600; display:flex; align-items:center; gap:10px; margin-top:4px; flex-wrap:wrap;}
+.panel-foot{display:flex; justify-content:space-between; align-items:center; font-size:12px; color:var(--muted); margin-top:10px; padding-top:12px; border-top:1px solid var(--line);}
+.panel-foot a{color:var(--primary);}
+.kpi-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:16px;}
+.kpi{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:18px;}
+.kpi-top{display:flex; align-items:center; justify-content:space-between; color:var(--muted); font-size:12.5px;}
+.kpi-top span{display:flex; align-items:center; gap:7px;}
+.kpi-top svg{width:14px; height:14px;}
+.kpi-dots{letter-spacing:2px; color:var(--dim);}
+.kpi-value{font-size:24px; font-weight:600; margin-top:12px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
+.delta{font-family:'Inter',sans-serif; font-size:10.5px; font-weight:600; padding:3px 7px; border-radius:4px; line-height:1;}
+.delta.up{background:rgba(52,211,153,.15); color:var(--green);}
+.delta.down{background:rgba(255,107,129,.15); color:var(--red);}
+.panel-row{display:grid; grid-template-columns:minmax(0,2fr) minmax(0,1fr); gap:16px;}
+.panel-row.two{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);}
+.panel-col{display:flex; flex-direction:column; gap:16px; min-width:0;}
+.legend{display:flex; gap:16px; flex-wrap:wrap; font-size:12px; color:var(--muted); align-items:center;}
+.legend i{display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:6px;}
+
+/* ===== Charts ===== */
+.chart{position:relative; width:100%;}
+.chart svg{display:block; width:100%; height:auto; overflow:visible;}
+.chart text{fill:var(--muted); font-size:11px; font-family:'Inter',sans-serif;}
+.chart .grid{stroke:var(--line); stroke-width:1;}
+.chart-tip{
+  position:absolute; pointer-events:none; background:var(--panel2); border:1px solid var(--line2); border-radius:8px;
+  padding:8px 11px; font-size:12px; white-space:nowrap; transform:translate(-50%,-110%); z-index:5; box-shadow:0 8px 24px rgba(0,0,0,.4);
+}
+.chart-tip[hidden]{display:none;}
+.chart-tip b{font-weight:600;}
+.tip-row{display:flex; align-items:center; gap:7px; color:var(--muted); margin-top:3px;}
+.tip-row i{width:8px; height:8px; border-radius:50%; display:inline-block;}
+.tip-row b{color:var(--text); margin-left:auto; padding-left:12px;}
+.chart-empty{padding:40px 0; text-align:center; color:var(--dim); font-size:13px;}
+
+/* ===== Tables ===== */
+.table-wrap{overflow-x:auto; margin:0 -4px;}
+table{width:100%; border-collapse:collapse; min-width:560px;}
+th{
+  text-align:left; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.05em; color:var(--dim);
+  padding:10px 12px; border-bottom:1px solid var(--line); white-space:nowrap;
+}
+td{padding:12px; border-bottom:1px solid var(--line); font-size:13px; vertical-align:middle;}
+tbody tr:hover td{background:rgba(255,255,255,.02);}
+tbody tr:last-child td{border-bottom:none;}
+td.num, th.num{text-align:right;}
+.cell-prod{display:flex; align-items:center; gap:12px; min-width:0;}
+.cell-prod img{width:40px; height:40px; border-radius:8px; object-fit:contain; background:var(--bg); padding:4px; flex-shrink:0;}
+.cell-prod .nm{font-weight:600; line-height:1.3;}
+.cell-prod .sb{font-size:11.5px; color:var(--muted);}
+.muted{color:var(--muted);}
+.badge{display:inline-block; font-size:11px; font-weight:600; padding:3px 9px; border-radius:20px; white-space:nowrap;}
+.badge.green{background:rgba(52,211,153,.14); color:var(--green);}
+.badge.red{background:rgba(255,107,129,.14); color:var(--red);}
+.badge.amber{background:rgba(255,181,71,.14); color:var(--amber);}
+.badge.blue{background:rgba(28,200,245,.14); color:var(--cyan);}
+.badge.purple{background:rgba(192,60,255,.16); color:#D98BFF;}
+.badge.gray{background:rgba(138,148,196,.14); color:var(--muted);}
+.toolbar{display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin-bottom:14px;}
+.toolbar .in{width:auto; min-width:160px;}
+.toolbar .grow{flex:1 1 220px;}
+.pills{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px;}
+.pill{
+  background:var(--bg); border:1px solid var(--line); color:var(--muted); border-radius:20px; padding:6px 13px;
+  font-size:12px; font-weight:600;
+}
+.pill b{color:var(--text); margin-left:5px;}
+.pill.active{border-color:var(--primary); color:#fff; background:rgba(192,60,255,.14);}
+.tabs{display:flex; gap:4px; border-bottom:1px solid var(--line); margin-bottom:16px; overflow-x:auto;}
+.tab{background:none; border:none; color:var(--muted); padding:10px 16px; font-size:13px; font-weight:600; border-bottom:2px solid transparent; white-space:nowrap;}
+.tab.active{color:#fff; border-bottom-color:var(--primary);}
+.empty{padding:40px 16px; text-align:center; color:var(--muted);}
+.banner{
+  display:flex; gap:12px; align-items:flex-start; background:rgba(255,181,71,.08); border:1px solid rgba(255,181,71,.3);
+  color:#FFD590; border-radius:var(--radius); padding:12px 16px; font-size:13px;
+}
+.banner[hidden]{display:none;}
+.banner svg{width:18px; height:18px; flex-shrink:0; margin-top:1px;}
+.banner.info{background:rgba(28,200,245,.07); border-color:rgba(28,200,245,.28); color:#9BE7FA;}
+.low-item{display:flex; align-items:center; gap:12px; padding:11px 0; border-bottom:1px solid var(--line);}
+.low-item:last-child{border-bottom:none;}
+.low-item .cell-prod{flex:1;}
+
+/* ===== Modal / toast ===== */
+.modal-ov{position:fixed; inset:0; background:rgba(3,5,18,.72); backdrop-filter:blur(3px); z-index:100; display:flex; align-items:center; justify-content:center; padding:20px;}
+.modal{background:var(--panel); border:1px solid var(--line2); border-radius:14px; width:100%; max-width:560px; max-height:calc(100vh - 40px); display:flex; flex-direction:column; box-shadow:0 30px 80px rgba(0,0,0,.6);}
+.modal.wide{max-width:680px;}
+.modal-head{display:flex; align-items:center; justify-content:space-between; padding:18px 22px; border-bottom:1px solid var(--line);}
+.modal-head h3{font-size:16px; font-weight:600;}
+.modal-x{background:none; border:none; color:var(--muted); font-size:22px; line-height:1; width:30px; height:30px; border-radius:6px;}
+.modal-x:hover{color:var(--text); background:rgba(255,255,255,.05);}
+.modal-body{padding:20px 22px; overflow-y:auto;}
+.modal-foot{display:flex; justify-content:flex-end; gap:10px; padding:14px 22px; border-top:1px solid var(--line);}
+.sum-row{display:flex; justify-content:space-between; padding:7px 0; font-size:13px; color:var(--muted);}
+.sum-row.total{color:var(--text); font-weight:700; border-top:1px solid var(--line); margin-top:6px; padding-top:12px; font-size:15px;}
+.toast-wrap{position:fixed; bottom:22px; right:22px; z-index:200; display:flex; flex-direction:column; gap:8px; align-items:flex-end;}
+.toast{background:var(--panel2); border:1px solid var(--line2); color:var(--text); padding:11px 16px; border-radius:8px; font-size:13px; box-shadow:0 10px 30px rgba(0,0,0,.5); display:flex; gap:9px; align-items:center; opacity:0; transform:translateY(8px); transition:.18s;}
+.toast.show{opacity:1; transform:none;}
+.toast i{width:8px; height:8px; border-radius:50%; background:var(--green); flex-shrink:0;}
+.toast.err i{background:var(--red);}
+
+/* ===== Settings ===== */
+.settings-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:16px; align-items:start;}
+.kv{display:flex; justify-content:space-between; gap:14px; padding:9px 0; border-bottom:1px solid var(--line); font-size:13px;}
+.kv:last-child{border-bottom:none;}
+.kv span:first-child{color:var(--muted);}
+.note-list{margin:10px 0 0 18px; color:var(--muted); font-size:13px; display:flex; flex-direction:column; gap:6px;}
+
+/* ===== Login ===== */
+.login-bg{
+  min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px;
+  background:
+    radial-gradient(900px 600px at 0% 0%, rgba(192,60,255,.55), transparent 60%),
+    radial-gradient(900px 700px at 100% 100%, rgba(40,60,200,.45), transparent 60%),
+    var(--bg);
+}
+.login-card{width:100%; max-width:420px; background:rgba(10,16,48,.92); border:1px solid var(--line2); border-radius:16px; padding:32px 30px; box-shadow:0 30px 80px rgba(0,0,0,.5);}
+.login-card .a-logo{padding:0 0 22px;}
+.login-card h1{font-size:22px; font-weight:600; margin-bottom:6px;}
+.login-card p.sub{font-size:13px; color:var(--muted); margin-bottom:22px;}
+.login-err{background:rgba(255,107,129,.1); border:1px solid rgba(255,107,129,.35); color:#FFB3BE; font-size:12.5px; padding:10px 12px; border-radius:8px; margin-bottom:14px;}
+.login-err[hidden]{display:none;}
+.login-foot{display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-top:18px; font-size:12px; color:var(--muted);}
+.login-foot a:hover, .login-foot button:hover{color:var(--text);}
+.login-foot button{background:none; border:none; color:var(--muted); font-size:12px; padding:0;}
+.login-note{font-size:11.5px; color:var(--dim); margin-top:16px; line-height:1.5;}
+.login-note[hidden]{display:none;}
+.field[hidden]{display:none;}
+
+/* ===== Responsive ===== */
+@media(max-width:1100px){
+  .panel-row, .panel-row.two{grid-template-columns:minmax(0,1fr);}
+}
+@media(max-width:900px){
+  .admin-shell{grid-template-columns:minmax(0,1fr);}
+  .sidebar{position:fixed; left:0; top:0; z-index:90; width:272px; transform:translateX(-102%); transition:transform .2s ease; box-shadow:20px 0 60px rgba(0,0,0,.5);}
+  .sidebar.open{transform:none;}
+  .menu-btn{display:flex;}
+  .a-top{padding:18px 18px 4px;}
+  .a-content{padding:16px 18px 40px;}
+  .a-actions{margin-left:0; width:100%;}
+}
+@media(max-width:420px){ .hide-xs{display:none;} }
+@media(max-width:560px){
+  .hide-sm{display:none;}
+  td, th{padding-left:8px; padding-right:8px;}
+  .row2, .row3{grid-template-columns:1fr;}
+  .toast-wrap{left:14px; right:14px; align-items:stretch;}
+}
+
+/* ===== Print (used by "Create report") ===== */
+@media print{
+  .sidebar, .a-actions, .menu-btn, .toast-wrap, .banner{display:none !important;}
+  html, body{background:#fff !important; color:#111 !important; overflow:visible;}
+  .admin-shell{display:block;}
+  .panel, .kpi{background:#fff !important; border:1px solid #ccc !important; break-inside:avoid;}
+  .chart text, .muted, .panel-label, .kpi-top, th{fill:#444 !important; color:#444 !important;}
+  .a-top, .a-content{padding:12px 0;}
+}
+</style>
+</head>
+
+<body data-page="dashboard">
+<div class="admin-shell">
+  <aside class="sidebar" id="sidebar" aria-label="Admin navigation">
+    <a class="a-logo" href="admin.html"><span class="a-mark">RK</span><span class="a-logo-text">R. K. Admin</span></a>
+    <form class="side-search" id="sideSearch" role="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input type="text" placeholder="Search orders..." aria-label="Search orders" autocomplete="off">
+    </form>
+    <nav class="side-nav">
+      <a class="side-link active" href="admin.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>Dashboard</a>
+      <a class="side-link " href="admin-orders.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2l1.5 4h9L18 2M4 6h16l-1.5 14h-13z"/></svg>Orders</a>
+      <a class="side-link " href="admin-products.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8l-9-5-9 5v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg>Products</a>
+      <a class="side-link " href="admin-customers.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="4"/><path d="M2 21c0-4 3-6 7-6s7 2 7 6M16 4a4 4 0 0 1 0 8M22 21c0-3-2-5-5-5.7"/></svg>Customers</a>
+    </nav>
+    <div class="side-sep"></div>
+    <nav class="side-nav">
+      <a class="side-link " href="admin-settings.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Settings</a>
+      <a class="side-link" href="index.html" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>View store</a>
+    </nav>
+    <div class="side-user">
+      <div class="avatar" id="adminAvatar">RK</div>
+      <div><div class="su-name" data-admin-name>Owner</div><a class="su-sub" href="admin-settings.html">Account settings</a></div>
+      <button class="icon-btn" id="signOutBtn" title="Sign out" aria-label="Sign out"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg></button>
+    </div>
+  </aside>
+  <div class="a-main">
+    <header class="a-top">
+      <button class="menu-btn" id="menuBtn" aria-label="Open menu">&#9776;</button>
+      <div><h1 class="a-title">Welcome back, <span data-admin-name>Owner</span></h1><div class="a-sub">Measure your store's revenue, orders and stock at a glance.</div></div>
+      <div class="a-actions"><button class="btn ghost" id="exportBtn">Export data &darr;</button><button class="btn primary" id="reportBtn">Create report</button></div>
+    </header>
+    <main class="a-content">
+      <div class="banner" id="sampleBanner" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+      <span><b>Showing sample data.</b> No orders have been placed in this browser yet. Place a test order on your store (in this same browser) and your real numbers will replace this. Orders from other people&#39;s devices can&#39;t show up here without a server.</span>
+    </div>
+      <section class="kpi-grid" id="kpiGrid"></section>
+      <section class="panel-row">
+        <div class="panel">
+          <div class="panel-head">
+            <div><div class="panel-label">Total revenue</div><div class="panel-value"><span id="revValue">₹0</span><span id="revDelta"></span></div></div>
+            <div class="legend" id="revLegend"></div>
+          </div>
+          <div class="chart" id="revChart"></div>
+        </div>
+        <div class="panel-col">
+          <div class="panel">
+            <div class="panel-label">Orders</div><div class="panel-value" id="ordValue">0</div>
+            <div class="chart" id="ordBars" style="margin-top:10px"></div>
+            <div class="panel-foot"><span>Last 30 days</span><a href="admin-orders.html">View orders</a></div>
+          </div>
+          <div class="panel">
+            <div class="panel-label">Items sold</div><div class="panel-value" id="itemsValue">0</div>
+            <div class="chart" id="itemsLine" style="margin-top:10px"></div>
+            <div class="panel-foot"><span>Last 30 days</span><a href="admin-products.html">View products</a></div>
+          </div>
+        </div>
+      </section>
+      <section class="panel-row two">
+        <div class="panel">
+          <div class="panel-head"><h3>Recent orders</h3><a href="admin-orders.html">View all</a></div>
+          <div class="table-wrap"><table style="min-width:0"><thead><tr><th>Order</th><th class="hide-xs">Customer</th><th class="hide-sm">Date</th><th class="num">Total</th><th>Status</th></tr></thead><tbody id="recentBody"></tbody></table></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h3>Low stock</h3><a href="admin-products.html?stock=low">Manage stock</a></div>
+          <div id="lowStock"></div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+<div class="toast-wrap" id="toastWrap" aria-live="polite"></div>
+<div id="modalRoot"></div>
+<script>'use strict';
+/* R. K. Admin: shared script (sign-in gate, data, charts, page logic).
+   NOTE: this site has no server, so everything here lives in the browser. The sign-in is a gate for this browser,
+   not server-level security. See the Settings page for a plain-language explanation. */
+
+const DEFAULT_CATALOG = [{"id": "rtx-4070", "name": "NVIDIA GeForce RTX 4070 12GB", "brand": "GIGABYTE", "cat": "Graphics Cards", "price": 52990, "was": 59990, "img": "https://codervent.com/fobia/demo/ltr/assets/images/products/12.png", "stockQty": 14, "rating": 4.6, "reviewCount": 128, "gallery": ["https://codervent.com/fobia/demo/ltr/assets/images/products/12.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/07.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/17.png"], "desc": "12GB GDDR6X graphics card built for 1440p and entry 4K gaming with DLSS 3 support."}, {"id": "rtx-4060ti", "name": "NVIDIA GeForce RTX 4060 Ti 8GB", "brand": "ASUS", "cat": "Graphics Cards", "price": 38990, "was": 42990, "img": "https://codervent.com/fobia/demo/ltr/assets/images/products/07.png", "stockQty": 22, "rating": 4.4, "reviewCount": 96, "gallery": ["https://codervent.com/fobia/demo/ltr/assets/images/products/07.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/12.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/03.png"], "desc": "Efficient 1440p performer with 8GB GDDR6 and dual-fan cooling."}, {"id": "ryzen-7800x3d", "name": "AMD Ryzen 7 7800X3D", "brand": "AMD", "cat": "Processors", "price": 34990, "was": 38990, "img": "https://codervent.com/fobia/demo/ltr/assets/images/products/10.png", "stockQty": 31, "rating": 4.8, "reviewCount": 214, "gallery": ["https://codervent.com/fobia/demo/ltr/assets/images/products/10.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/03.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/02.png"], "desc": "8-core gaming-first CPU with 3D V-Cache for class-leading frame rates."}, {"id": "intel-i5-14600k", "name": "Intel Core i5-14600K", "brand": "Intel", "cat": "Processors", "price": 27990, "was": 31990, "img": "https://codervent.com/fobia/demo/ltr/assets/images/products/03.png", "stockQty": 4, "rating": 4.5, "reviewCount": 167, "gallery": ["https://codervent.com/fobia/demo/ltr/assets/images/products/03.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/10.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/05.png"], "desc": "14-core hybrid processor balancing single-thread speed with multitasking headroom."}, {"id": "gigabyte-b650", "name": "GIGABYTE B650 AORUS Elite AX", "brand": "GIGABYTE", "cat": "Motherboards", "price": 16990, "was": 19990, "img": "https://codervent.com/fobia/demo/ltr/assets/images/products/02.png", "stockQty": 19, "rating": 4.3, "reviewCount": 58, "gallery": ["https://codervent.com/fobia/demo/ltr/assets/images/products/02.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/05.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/06.png"], "desc": "AM5 ATX board with WiFi 6E, PCIe 4.0, and robust VRM for Ryzen builds."}, {"id": "corsair-32gb", "name": "Corsair Vengeance 32GB DDR5-6000", "brand": "Corsair", "cat": "Memory", "price": 9490, "was": 11990, "img": "https://codervent.com/fobia/demo/ltr/assets/images/products/05.png", "stockQty": 47, "rating": 4.7, "reviewCount": 301, "gallery": ["https://codervent.com/fobia/demo/ltr/assets/images/products/05.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/06.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/17.png"], "desc": "Dual-channel 2x16GB kit tuned for AMD EXPO and Intel XMP 3.0."}, {"id": "wd-2tb-nvme", "name": "WD Black SN850X 2TB NVMe Gen4", "brand": "Western Digital", "cat": "Storage", "price": 14990, "was": 17990, "img": "https://codervent.com/fobia/demo/ltr/assets/images/products/06.png", "stockQty": 26, "rating": 4.8, "reviewCount": 189, "gallery": ["https://codervent.com/fobia/demo/ltr/assets/images/products/06.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/02.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/12.png"], "desc": "Up to 7300MB/s reads — built for large game libraries and creative workloads."}, {"id": "corsair-rm850", "name": "Corsair RM850x 850W 80+ Gold", "brand": "Corsair", "cat": "Power Supplies", "price": 10990, "was": 12990, "img": "https://codervent.com/fobia/demo/ltr/assets/images/products/17.png", "stockQty": 0, "rating": 4.6, "reviewCount": 74, "gallery": ["https://codervent.com/fobia/demo/ltr/assets/images/products/17.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/05.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/10.png"], "desc": "Fully modular, zero-RPM fan mode, 10-year warranty."}, {"id": "lianli-o11", "name": "Lian Li O11 Dynamic EVO", "brand": "Lian Li", "cat": "Cases", "price": 13990, "was": 15990, "img": "https://codervent.com/fobia/demo/ltr/assets/images/products/04.png", "stockQty": 3, "rating": 4.7, "reviewCount": 112, "gallery": ["https://codervent.com/fobia/demo/ltr/assets/images/products/04.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/17.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/02.png"], "desc": "Dual-chamber ATX case with excellent airflow and cable management."}, {"id": "logitech-g502", "name": "Logitech G502 Hero Wireless", "brand": "Logitech", "cat": "Gaming Gear", "price": 6990, "was": 8490, "img": "https://codervent.com/fobia/demo/ltr/assets/images/products/10.png", "stockQty": 38, "rating": 4.5, "reviewCount": 245, "gallery": ["https://codervent.com/fobia/demo/ltr/assets/images/products/10.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/03.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/07.png"], "desc": "25K DPI wireless gaming mouse with 11 programmable buttons."}, {"id": "keychron-k8", "name": "Keychron K8 Pro Mechanical Keyboard", "brand": "Keychron", "cat": "Gaming Gear", "price": 8990, "was": 9990, "img": "https://codervent.com/fobia/demo/ltr/assets/images/products/02.png", "stockQty": 17, "rating": 4.4, "reviewCount": 88, "gallery": ["https://codervent.com/fobia/demo/ltr/assets/images/products/02.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/10.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/05.png"], "desc": "Hot-swappable TKL board with QMK/VIA support and wireless connectivity."}, {"id": "prebuilt-vortex", "name": "Vortex Gaming Rig — RTX 4070 / R7 7800X3D", "brand": "R. K. Computers", "cat": "Pre-Built PCs", "price": 139990, "was": 154990, "img": "https://codervent.com/fobia/demo/ltr/assets/images/products/12.png", "stockQty": 6, "rating": 4.9, "reviewCount": 41, "gallery": ["https://codervent.com/fobia/demo/ltr/assets/images/products/12.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/10.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/04.png"], "desc": "Ready-to-ship 1440p gaming system, 240Hz ready, 2-year warranty."}, {"id": "corsair-h100i", "name": "Corsair iCUE H100i RGB 240mm AIO Cooler", "brand": "Corsair", "cat": "Cooling", "price": 12990, "was": 14990, "img": "https://codervent.com/fobia/demo/ltr/assets/images/products/05.png", "stockQty": 21, "rating": 4.6, "reviewCount": 97, "gallery": ["https://codervent.com/fobia/demo/ltr/assets/images/products/05.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/17.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/10.png"], "desc": "240mm liquid cooler with addressable RGB and near-silent pump noise under load."}, {"id": "deepcool-ak620", "name": "Deepcool AK620 Dual-Tower Air Cooler", "brand": "Deepcool", "cat": "Cooling", "price": 5490, "was": 6490, "img": "https://codervent.com/fobia/demo/ltr/assets/images/products/03.png", "stockQty": 4, "rating": 4.7, "reviewCount": 63, "gallery": ["https://codervent.com/fobia/demo/ltr/assets/images/products/03.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/10.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/02.png"], "desc": "Dual-tower air cooler that rivals AIO performance without the pump or tubing."}, {"id": "asus-vg27aq", "name": "ASUS TUF Gaming VG27AQ 27\" QHD 165Hz", "brand": "ASUS", "cat": "Monitors", "price": 27990, "was": 32990, "img": "https://codervent.com/fobia/demo/ltr/assets/images/products/07.png", "stockQty": 9, "rating": 4.5, "reviewCount": 134, "gallery": ["https://codervent.com/fobia/demo/ltr/assets/images/products/07.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/12.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/17.png"], "desc": "27-inch QHD IPS panel with 165Hz refresh and G-Sync compatibility for smooth, sharp competitive play."}, {"id": "lg-24gn650", "name": "LG UltraGear 24GN650 24\" FHD 144Hz", "brand": "LG", "cat": "Monitors", "price": 14990, "was": 17990, "img": "https://codervent.com/fobia/demo/ltr/assets/images/products/12.png", "stockQty": 16, "rating": 4.4, "reviewCount": 201, "gallery": ["https://codervent.com/fobia/demo/ltr/assets/images/products/12.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/07.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/03.png"], "desc": "Budget-friendly 144Hz 1ms monitor that's an easy first upgrade from 60Hz."}, {"id": "tg-kryonaut", "name": "Thermal Grizzly Kryonaut Thermal Paste 1g", "brand": "Thermal Grizzly", "cat": "Accessories", "price": 990, "was": 1290, "img": "https://codervent.com/fobia/demo/ltr/assets/images/products/06.png", "stockQty": 54, "rating": 4.8, "reviewCount": 412, "gallery": ["https://codervent.com/fobia/demo/ltr/assets/images/products/06.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/02.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/17.png"], "desc": "High-performance non-conductive thermal compound for CPU and GPU repastes."}, {"id": "logitech-c920", "name": "Logitech C920 HD Pro Webcam", "brand": "Logitech", "cat": "Accessories", "price": 6490, "was": 7990, "img": "https://codervent.com/fobia/demo/ltr/assets/images/products/10.png", "stockQty": 12, "rating": 4.5, "reviewCount": 178, "gallery": ["https://codervent.com/fobia/demo/ltr/assets/images/products/10.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/03.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/07.png"], "desc": "1080p autofocus webcam with stereo mics — a reliable step up for calls and streaming."}, {"id": "asus-b760f", "name": "ASUS ROG Strix B760-F Gaming WiFi", "brand": "ASUS", "cat": "Motherboards", "price": 18990, "was": 21990, "img": "https://codervent.com/fobia/demo/ltr/assets/images/products/02.png", "stockQty": 11, "rating": 4.5, "reviewCount": 72, "gallery": ["https://codervent.com/fobia/demo/ltr/assets/images/products/02.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/05.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/06.png"], "desc": "LGA1700 ATX board with WiFi 6E and PCIe 5.0 — the Intel counterpart to our AM5 board."}, {"id": "msi-a750gf", "name": "MSI MPG A750GF 750W 80+ Gold", "brand": "MSI", "cat": "Power Supplies", "price": 8990, "was": 10490, "img": "https://codervent.com/fobia/demo/ltr/assets/images/products/17.png", "stockQty": 18, "rating": 4.4, "reviewCount": 55, "gallery": ["https://codervent.com/fobia/demo/ltr/assets/images/products/17.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/05.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/10.png"], "desc": "Fully modular 750W Gold-rated supply with flat cables and a 10-year warranty."}, {"id": "nzxt-h5flow", "name": "NZXT H5 Flow Mid-Tower Case", "brand": "NZXT", "cat": "Cases", "price": 7990, "was": 8990, "img": "https://codervent.com/fobia/demo/ltr/assets/images/products/04.png", "stockQty": 24, "rating": 4.6, "reviewCount": 149, "gallery": ["https://codervent.com/fobia/demo/ltr/assets/images/products/04.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/17.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/02.png"], "desc": "High-airflow mid-tower with a clean interior and tool-free panels — a more affordable alternative to the O11."}, {"id": "kingston-16gb", "name": "Kingston Fury Beast 16GB DDR5-5600", "brand": "Kingston", "cat": "Memory", "price": 4990, "was": 5990, "img": "https://codervent.com/fobia/demo/ltr/assets/images/products/05.png", "stockQty": 33, "rating": 4.5, "reviewCount": 167, "gallery": ["https://codervent.com/fobia/demo/ltr/assets/images/products/05.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/06.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/17.png"], "desc": "2x8GB budget-friendly kit for builds that don't need 32GB on day one."}, {"id": "logitech-m185", "name": "Logitech M185 Wireless Mouse", "brand": "Logitech", "cat": "Gaming Gear", "price": 726, "was": 1195, "img": "https://codervent.com/fobia/demo/ltr/assets/images/products/10.png", "stockQty": 48, "rating": 4.3, "reviewCount": 526, "gallery": ["https://codervent.com/fobia/demo/ltr/assets/images/products/10.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/03.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/07.png"], "desc": "Compact 2.4GHz wireless mouse with a plug-and-play nano receiver — a simple, reliable everyday mouse."}, {"id": "logitech-g305", "name": "Logitech G305 Lightspeed Wireless Gaming Mouse", "brand": "Logitech", "cat": "Gaming Gear", "price": 2699, "was": 3795, "img": "https://codervent.com/fobia/demo/ltr/assets/images/products/03.png", "stockQty": 27, "rating": 4.6, "reviewCount": 318, "gallery": ["https://codervent.com/fobia/demo/ltr/assets/images/products/03.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/10.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/02.png"], "desc": "Lightweight wireless gaming mouse with a 12,000 DPI sensor and up to 250 hours on a single battery."}, {"id": "logitech-mx-anywhere-3s", "name": "Logitech MX Anywhere 3S Compact Wireless Mouse", "brand": "Logitech", "cat": "Gaming Gear", "price": 6490, "was": 9225, "img": "https://codervent.com/fobia/demo/ltr/assets/images/products/07.png", "stockQty": 14, "rating": 4.7, "reviewCount": 142, "gallery": ["https://codervent.com/fobia/demo/ltr/assets/images/products/07.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/12.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/05.png"], "desc": "Travel-friendly mouse with fast scrolling and precise tracking on nearly any surface, including glass."}, {"id": "logitech-mx-master-3s", "name": "Logitech MX Master 3S Wireless Performance Mouse", "brand": "Logitech", "cat": "Gaming Gear", "price": 9785, "was": 12495, "img": "https://codervent.com/fobia/demo/ltr/assets/images/products/12.png", "stockQty": 5, "rating": 4.8, "reviewCount": 267, "gallery": ["https://codervent.com/fobia/demo/ltr/assets/images/products/12.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/07.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/17.png"], "desc": "Ergonomic 8K DPI mouse with near-silent clicks and a magnetic scroll wheel, built for all-day productivity."}, {"id": "logitech-g-pro-x-superlight-2", "name": "Logitech G PRO X SUPERLIGHT 2 Wireless Gaming Mouse", "brand": "Logitech", "cat": "Gaming Gear", "price": 12695, "was": 17995, "img": "https://codervent.com/fobia/demo/ltr/assets/images/products/04.png", "stockQty": 8, "rating": 4.9, "reviewCount": 89, "gallery": ["https://codervent.com/fobia/demo/ltr/assets/images/products/04.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/12.png", "https://codervent.com/fobia/demo/ltr/assets/images/products/10.png"], "desc": "Sub-60g esports mouse with a 44K DPI sensor and USB-C fast charging, built for competitive play."}];
+const CATEGORY_ORDER = ["Processors", "Graphics Cards", "Motherboards", "Memory", "Storage", "Power Supplies", "Cases", "Cooling", "Monitors", "Gaming Gear", "Accessories", "Pre-Built PCs"];
+
+// ---------- helpers ----------
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const inr = n => '₹' + Math.round(n || 0).toLocaleString('en-IN');
+const compact = n => {
+  const t = x => x.toFixed(1).replace(/\.0$/, '');
+  if (n >= 1e7) return t(n / 1e7) + 'Cr';
+  if (n >= 1e5) return t(n / 1e5) + 'L';
+  if (n >= 1e3) return t(n / 1e3) + 'K';
+  return String(Math.round(n));
+};
+const DAY = 86400000;
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } },
+  del(k) { try { localStorage.removeItem(k); } catch (e) { /* ignore */ } }
+};
+const fmtDate = iso => new Date(iso).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+const initials = n => String(n || 'RK').trim().split(/\s+/).map(w => w[0]).slice(0, 2).join('').toUpperCase() || 'RK';
+const currentFile = () => location.pathname.split('/').pop() || 'admin.html';
+const ADMIN_PAGES = ['admin.html', 'admin-orders.html', 'admin-products.html', 'admin-customers.html', 'admin-settings.html'];
+const debounce = (fn, ms) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; };
+
+function toast(msg, type) {
+  const wrap = $('#toastWrap'); if (!wrap) return;
+  const t = document.createElement('div');
+  t.className = 'toast' + (type === 'err' ? ' err' : '');
+  t.innerHTML = '<i></i><span>' + esc(msg) + '</span>';
+  wrap.appendChild(t);
+  requestAnimationFrame(() => t.classList.add('show'));
+  setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 220); }, 2600);
+}
+function download(name, text, mime) {
+  const blob = new Blob([text], { type: mime || 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = name;
+  document.body.appendChild(a); a.click();
+  setTimeout(() => { a.remove(); URL.revokeObjectURL(url); }, 500);
+}
+function toCSV(rows) {
+  return rows.map(r => r.map(c => {
+    let s = String(c ?? '');
+    if (typeof c === 'string' && /^[=+\-@]/.test(s)) s = "'" + s; // stop spreadsheet formula injection
+    return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+  }).join(',')).join('\n');
+}
+function openModal({ title, body, footer, wide, onMount, onClose }) {
+  const root = $('#modalRoot');
+  const ov = document.createElement('div'); ov.className = 'modal-ov';
+  ov.innerHTML = '<div class="modal' + (wide ? ' wide' : '') + '" role="dialog" aria-modal="true" aria-label="' + esc(title) + '"><div class="modal-head"><h3>' + esc(title) + '</h3><button class="modal-x" aria-label="Close">&times;</button></div><div class="modal-body"></div><div class="modal-foot"></div></div>';
+  const bodyEl = $('.modal-body', ov), footEl = $('.modal-foot', ov);
+  bodyEl.innerHTML = body || '';
+  if (footer) footEl.innerHTML = footer; else footEl.remove();
+  root.appendChild(ov);
+  const onKey = e => { if (e.key === 'Escape') close(); };
+  function close() { if (!ov.isConnected) return; ov.remove(); document.removeEventListener('keydown', onKey); if (onClose) onClose(); }
+  document.addEventListener('keydown', onKey);
+  ov.addEventListener('mousedown', e => { if (e.target === ov) close(); });
+  $('.modal-x', ov).addEventListener('click', close);
+  if (onMount) onMount({ ov, body: bodyEl, foot: footEl, close });
+  return close;
+}
+function confirmDialog(message, label, danger = true) {
+  return new Promise(res => {
+    let done = false; const finish = v => { if (!done) { done = true; res(v); } };
+    openModal({
+      title: 'Are you sure?',
+      body: '<p class="muted">' + esc(message) + '</p>',
+      footer: '<button class="btn outline" data-no>Cancel</button><button class="btn ' + (danger ? 'danger' : 'primary') + '" data-yes>' + esc(label || 'Confirm') + '</button>',
+      onClose: () => finish(false),
+      onMount: ({ foot, close }) => {
+        $('[data-no]', foot).onclick = close;
+        $('[data-yes]', foot).onclick = () => { finish(true); close(); };
+        $('[data-yes]', foot).focus();
+      }
+    });
+  });
+}
+
+// ---------- SHA-256 (pure JS, so it works on file:// and plain http too) ----------
+const SHA_K = new Uint32Array([0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5, 0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174, 0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da, 0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7, 0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967, 0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13, 0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85, 0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070, 0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3, 0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2]);
+function sha256Bytes(bytes) {
+  const H = new Uint32Array([0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19]);
+  const l = bytes.length, bitLen = l * 8, padLen = (l + 9 + 63) & ~63;
+  const m = new Uint8Array(padLen); m.set(bytes); m[l] = 0x80;
+  const dv = new DataView(m.buffer);
+  dv.setUint32(padLen - 8, Math.floor(bitLen / 0x100000000)); dv.setUint32(padLen - 4, bitLen >>> 0);
+  const w = new Uint32Array(64);
+  for (let off = 0; off < padLen; off += 64) {
+    for (let i = 0; i < 16; i++) w[i] = dv.getUint32(off + i * 4);
+    for (let i = 16; i < 64; i++) {
+      const s0 = ((w[i - 15] >>> 7) | (w[i - 15] << 25)) ^ ((w[i - 15] >>> 18) | (w[i - 15] << 14)) ^ (w[i - 15] >>> 3);
+      const s1 = ((w[i - 2] >>> 17) | (w[i - 2] << 15)) ^ ((w[i - 2] >>> 19) | (w[i - 2] << 13)) ^ (w[i - 2] >>> 10);
+      w[i] = (w[i - 16] + s0 + w[i - 7] + s1) >>> 0;
+    }
+    let a = H[0], b = H[1], c = H[2], d = H[3], e = H[4], f = H[5], g = H[6], h = H[7];
+    for (let i = 0; i < 64; i++) {
+      const S1 = ((e >>> 6) | (e << 26)) ^ ((e >>> 11) | (e << 21)) ^ ((e >>> 25) | (e << 7));
+      const ch = (e & f) ^ (~e & g);
+      const t1 = (h + S1 + ch + SHA_K[i] + w[i]) >>> 0;
+      const S0 = ((a >>> 2) | (a << 30)) ^ ((a >>> 13) | (a << 19)) ^ ((a >>> 22) | (a << 10));
+      const maj = (a & b) ^ (a & c) ^ (b & c);
+      const t2 = (S0 + maj) >>> 0;
+      h = g; g = f; f = e; e = (d + t1) >>> 0; d = c; c = b; b = a; a = (t1 + t2) >>> 0;
+    }
+    H[0] = (H[0] + a) >>> 0; H[1] = (H[1] + b) >>> 0; H[2] = (H[2] + c) >>> 0; H[3] = (H[3] + d) >>> 0;
+    H[4] = (H[4] + e) >>> 0; H[5] = (H[5] + f) >>> 0; H[6] = (H[6] + g) >>> 0; H[7] = (H[7] + h) >>> 0;
+  }
+  const out = new Uint8Array(32), odv = new DataView(out.buffer);
+  for (let i = 0; i < 8; i++) odv.setUint32(i * 4, H[i]);
+  return out;
+}
+const toHex = b => Array.from(b, x => x.toString(16).padStart(2, '0')).join('');
+const fromHex = h => { const a = new Uint8Array(h.length / 2); for (let i = 0; i < a.length; i++) a[i] = parseInt(h.substr(i * 2, 2), 16); return a; };
+const concatBytes = (a, b) => { const o = new Uint8Array(a.length + b.length); o.set(a); o.set(b, a.length); return o; };
+function hashPassword(pw, saltHex, rounds) {
+  const enc = new TextEncoder().encode(pw);
+  let h = sha256Bytes(concatBytes(fromHex(saltHex), enc));
+  for (let i = 0; i < rounds; i++) h = sha256Bytes(concatBytes(h, enc));
+  return toHex(h);
+}
+const sameString = (a, b) => { if (a.length !== b.length) return false; let r = 0; for (let i = 0; i < a.length; i++) r |= a.charCodeAt(i) ^ b.charCodeAt(i); return r === 0; };
+
+// ---------- sign-in gate ----------
+const LS_CRED = 'rk_admin_cred', SS_SESSION = 'rk_admin_session', LS_FAIL = 'rk_admin_fail';
+const Auth = {
+  TTL: 30 * 60 * 1000, MAX_FAILS: 5, LOCK_MS: 5 * 60 * 1000, ROUNDS: 30000,
+  cred() { return store.get(LS_CRED, null); },
+  isSetup() { return !!this.cred(); },
+  salt() {
+    const a = new Uint8Array(16);
+    if (window.crypto && crypto.getRandomValues) crypto.getRandomValues(a); else for (let i = 0; i < 16; i++) a[i] = Math.floor(Math.random() * 256);
+    return toHex(a);
+  },
+  setup(name, pw) {
+    const salt = this.salt();
+    const c = { name: (name || '').trim() || 'Owner', salt, rounds: this.ROUNDS, hash: hashPassword(pw, salt, this.ROUNDS), created: Date.now() };
+    store.set(LS_CRED, c); this.startSession(); return c;
+  },
+  verify(pw) { const c = this.cred(); return !!c && sameString(hashPassword(pw, c.salt, c.rounds), c.hash); },
+  lockRemaining() { const f = store.get(LS_FAIL, { count: 0, until: 0 }); return Math.max(0, (f.until || 0) - Date.now()); },
+  login(pw) {
+    const rem = this.lockRemaining();
+    if (rem > 0) return { ok: false, locked: true, remaining: rem };
+    if (this.verify(pw)) { store.set(LS_FAIL, { count: 0, until: 0 }); this.startSession(); return { ok: true }; }
+    let f = store.get(LS_FAIL, { count: 0, until: 0 });
+    if (f.until && f.until <= Date.now()) f = { count: 0, until: 0 };
+    f.count = (f.count || 0) + 1;
+    if (f.count >= this.MAX_FAILS) { store.set(LS_FAIL, { count: 0, until: Date.now() + this.LOCK_MS }); return { ok: false, locked: true, remaining: this.LOCK_MS }; }
+    store.set(LS_FAIL, f);
+    return { ok: false, left: this.MAX_FAILS - f.count };
+  },
+  startSession() { try { sessionStorage.setItem(SS_SESSION, JSON.stringify({ until: Date.now() + this.TTL })); } catch (e) { /* ignore */ } },
+  isAuthed() { try { const s = JSON.parse(sessionStorage.getItem(SS_SESSION) || 'null'); return !!s && s.until > Date.now(); } catch (e) { return false; } },
+  touch() { if (this.isAuthed()) this.startSession(); },
+  logout() { try { sessionStorage.removeItem(SS_SESSION); } catch (e) { /* ignore */ } },
+  changePassword(oldPw, newPw) {
+    if (!this.verify(oldPw)) return false;
+    const c = this.cred(), salt = this.salt();
+    store.set(LS_CRED, { ...c, salt, rounds: this.ROUNDS, hash: hashPassword(newPw, salt, this.ROUNDS) });
+    return true;
+  },
+  rename(name) { const c = this.cred(); if (c) store.set(LS_CRED, { ...c, name: (name || '').trim() || 'Owner' }); }
+};
+function weakPassword(pw) {
+  if (pw.length < 8) return 'Use at least 8 characters.';
+  if (/^(.)\1+$/.test(pw)) return 'That password is too simple.';
+  if (['password', '12345678', '123456789', 'qwertyui', 'admin123', 'password1', 'iloveyou'].includes(pw.toLowerCase())) return 'That password is too common.';
+  if (!(/[A-Za-z]/.test(pw) && /[0-9]/.test(pw))) return 'Mix letters and numbers.';
+  return '';
+}
+
+// ---------- data layer ----------
+function rng(seed) { return function () { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const STATUSES = ['New', 'Processing', 'Shipped', 'Delivered', 'Cancelled'];
+const STATUS_BADGE = { New: 'blue', Processing: 'amber', Shipped: 'purple', Delivered: 'green', Cancelled: 'red' };
+const SAMPLE_PEOPLE = (() => {
+  const first = ['Amelia', 'Ravi', 'Priya', 'Lucas', 'Sofia', 'Karthik', 'Nadia', 'James', 'Hana', 'Diego', 'Meera', 'Arjun', 'Fatima', 'Vikram', 'Anita', 'Suresh', 'Lakshmi', 'Rahul', 'Divya', 'Mohammed', 'Tara', 'Sanjay', 'Neha', 'Imran', 'Kavya'];
+  const last = ['Fischer', 'Shankar', 'Menon', 'Meyer', 'Rossi', 'Raja', 'Haddad', 'Okoro', 'Kobayashi', 'Alvarez', 'Iyer', 'Patel', 'Khan', 'Singh', 'Das', 'Kumar', 'Narayan', 'Verma', 'Nair', 'Ali', 'Bose', 'Gupta', 'Reddy', 'Sharma', 'Joshi'];
+  const out = [], seen = new Set();
+  for (let i = 0; out.length < 70 && i < 5000; i++) {
+    const f = first[(i * 7) % first.length], l = last[(i * 3 + Math.floor(i / first.length)) % last.length], name = f + ' ' + l;
+    if (seen.has(name)) continue; seen.add(name);
+    out.push([name, (f + '.' + l).toLowerCase() + (out.length + 1)]);
+  }
+  return out;
+})();
+const sampleEmail = p => p[1] + '@example.com';
+
+function sampleOrders() {
+  const r = rng(20261), now = Date.now(), seen = new Set(), out = [];
+  for (let i = 0; i < 84; i++) {
+    const daysAgo = Math.floor(Math.pow(r(), 1.4) * 358);
+    const date = new Date(now - daysAgo * DAY - Math.floor(r() * DAY)).toISOString();
+    const person = SAMPLE_PEOPLE[Math.floor(r() * SAMPLE_PEOPLE.length)];
+    const nItems = 1 + Math.floor(r() * 3), items = [], used = new Set();
+    for (let k = 0; k < nItems; k++) {
+      const p = DEFAULT_CATALOG[Math.floor(r() * DEFAULT_CATALOG.length)];
+      if (used.has(p.id)) continue; used.add(p.id);
+      items.push({ id: p.id, name: p.name, qty: r() < 0.85 ? 1 : 2, price: p.price, img: p.img });
+    }
+    const subtotal = items.reduce((s, x) => s + x.price * x.qty, 0);
+    const discount = r() < 0.22 ? Math.round(subtotal * 0.1) : 0;
+    const shipping = subtotal > 2000 ? 0 : 249, taxable = subtotal - discount, tax = Math.round(taxable * 0.18);
+    let number; do { number = 'RK-' + (41000 + Math.floor(r() * 58000)); } while (seen.has(number)); seen.add(number);
+    let status;
+    if (daysAgo > 10) status = r() < 0.06 ? 'Cancelled' : 'Delivered';
+    else if (daysAgo > 5) status = r() < 0.7 ? 'Shipped' : 'Delivered';
+    else status = r() < 0.5 ? 'Processing' : 'New';
+    const pm = r();
+    out.push({ number, date, items, subtotal, discount, shipping, tax, total: taxable + shipping + tax,
+      paymentMethod: pm < 0.6 ? 'upi' : pm < 0.85 ? 'card' : 'cod', customerName: person[0], customerEmail: sampleEmail(person), status, sample: true });
+  }
+  return out.sort((a, b) => new Date(b.date) - new Date(a.date));
+}
+const Data = {
+  catalog() { return store.get('rk_admin_catalog', null) || DEFAULT_CATALOG.map(p => ({ ...p })); },
+  saveCatalog(list) { store.set('rk_admin_catalog', list); },
+  resetCatalog() { store.del('rk_admin_catalog'); },
+  hasCatalogEdits() { return store.get('rk_admin_catalog', null) !== null; },
+  categories() { const cats = this.catalog().map(p => p.cat); return [...CATEGORY_ORDER.filter(c => cats.includes(c)), ...[...new Set(cats)].filter(c => !CATEGORY_ORDER.includes(c))]; },
+  statusMap() { return store.get('rk_admin_order_status', {}); },
+  setStatus(num, st) { const m = this.statusMap(); m[num] = st; store.set('rk_admin_order_status', m); },
+  orders() {
+    const real = store.get('cf_orders', []), map = this.statusMap();
+    const norm = (o, sample) => ({
+      number: o.number, date: o.date, items: (o.items || []).map(i => ({ id: i.id, name: i.name, qty: i.qty || 1, price: i.price || 0, img: i.img || '' })),
+      subtotal: o.subtotal || 0, discount: o.discount || 0, shipping: o.shipping || 0, tax: o.tax || 0, total: o.total || 0,
+      paymentMethod: o.paymentMethod || 'upi', customerName: o.customerName || 'Customer', customerEmail: o.customerEmail || '',
+      status: map[o.number] || o.status || 'New', sample
+    });
+    if (Array.isArray(real) && real.length) return { sample: false, list: real.map(o => norm(o, false)).sort((a, b) => new Date(b.date) - new Date(a.date)) };
+    return { sample: true, list: sampleOrders().map(o => norm(o, true)) };
+  },
+  newsletter() {
+    const real = store.get('cf_newsletter', []);
+    if (Array.isArray(real) && real.length) return { sample: false, list: real.slice() };
+    return { sample: true, list: SAMPLE_PEOPLE.slice(0, 14).map(sampleEmail) };
+  },
+  notifyRequests() {
+    const real = store.get('cf_notify_requests', []);
+    if (Array.isArray(real) && real.length) return { sample: false, list: real.slice().reverse() };
+    const r = rng(77), out = [], now = Date.now();
+    const oos = DEFAULT_CATALOG.filter(p => p.stockQty <= 5);
+    for (let i = 0; i < 7; i++) { const p = oos[i % Math.max(1, oos.length)] || DEFAULT_CATALOG[0]; out.push({ productId: p.id, email: sampleEmail(SAMPLE_PEOPLE[i + 3]), date: new Date(now - Math.floor(r() * 20) * DAY).toISOString() }); }
+    return { sample: true, list: out.sort((a, b) => new Date(b.date) - new Date(a.date)) };
+  }
+};
+const live = list => list.filter(o => o.status !== 'Cancelled');
+const paymentLabel = p => ({ upi: 'UPI', card: 'Card', cod: 'Cash on delivery' }[p] || String(p).toUpperCase());
+function stockBadge(q) {
+  if (q <= 0) return '<span class="badge red">Out of stock</span>';
+  if (q <= 5) return '<span class="badge amber">Only ' + q + ' left</span>';
+  return '<span class="badge green">In stock · ' + q + '</span>';
+}
+const deltaChip = pct => pct == null || !isFinite(pct) ? '' : pct >= 0 ? '<span class="delta up">' + pct.toFixed(1) + '% ↗</span>' : '<span class="delta down">' + Math.abs(pct).toFixed(1) + '% ↘</span>';
+const pctChange = (cur, prev) => prev > 0 ? ((cur - prev) / prev) * 100 : null;
+
+// ---------- charts (hand-drawn SVG, no libraries) ----------
+function niceMax(v) { if (v <= 0) return 1; const p = Math.pow(10, Math.floor(Math.log10(v))), n = v / p; return (n <= 1 ? 1 : n <= 2 ? 2 : n <= 2.5 ? 2.5 : n <= 5 ? 5 : 10) * p; }
+function smoothPath(pts, top, bottom) {
+  if (!pts.length) return '';
+  if (pts.length === 1) return 'M' + pts[0][0] + ',' + pts[0][1];
+  const cl = y => Math.min(Math.max(y, top), bottom);
+  let d = 'M' + pts[0][0].toFixed(1) + ',' + pts[0][1].toFixed(1);
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p0 = pts[i - 1] || pts[i], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || p2, t = 0.18;
+    d += ' C' + (p1[0] + (p2[0] - p0[0]) * t).toFixed(1) + ',' + cl(p1[1] + (p2[1] - p0[1]) * t).toFixed(1) + ' ' +
+      (p2[0] - (p3[0] - p1[0]) * t).toFixed(1) + ',' + cl(p2[1] - (p3[1] - p1[1]) * t).toFixed(1) + ' ' + p2[0].toFixed(1) + ',' + p2[1].toFixed(1);
+  }
+  return d;
+}
+function lineChart(el, cfg) {
+  const fmt = cfg.yFmt || compact;
+  const draw = () => {
+    const W = Math.max(260, Math.round(el.clientWidth || 640)), H = (typeof cfg.height === 'function' ? cfg.height() : cfg.height) || 300, mini = !!cfg.compact;
+    const padL = mini ? 40 : 56, padR = 14, padT = 12, padB = 28, iw = W - padL - padR, ih = H - padT - padB, n = cfg.labels.length;
+    const max = niceMax(Math.max(1, ...cfg.series.flatMap(s => s.values)));
+    const X = i => padL + (n === 1 ? iw / 2 : (i * iw) / (n - 1)), Y = v => padT + ih - (v / max) * ih;
+    const uid = 'g' + Math.random().toString(36).slice(2, 8), ticks = mini ? 3 : 5;
+    let s = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + esc(cfg.aria || 'Chart') + '"><defs>';
+    cfg.series.forEach((se, k) => { if (se.fill) s += '<linearGradient id="' + uid + k + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + se.color + '" stop-opacity=".35"/><stop offset="1" stop-color="' + se.color + '" stop-opacity="0"/></linearGradient>'; });
+    s += '</defs>';
+    for (let t = 0; t <= ticks; t++) { const v = max * t / ticks, yy = Y(v); s += '<line class="grid" x1="' + padL + '" x2="' + (W - padR) + '" y1="' + yy + '" y2="' + yy + '"/><text x="' + (padL - 10) + '" y="' + (yy + 4) + '" text-anchor="end">' + esc(fmt(v)) + '</text>'; }
+    const step = Math.ceil(n / (mini ? 4 : 12));
+    cfg.labels.forEach((lb, i) => { if (i % step === 0) s += '<text x="' + X(i) + '" y="' + (H - 8) + '" text-anchor="middle">' + esc(lb) + '</text>'; });
+    cfg.series.forEach((se, k) => {
+      const pts = se.values.map((v, i) => [X(i), Y(v)]), line = smoothPath(pts, padT, padT + ih);
+      if (se.fill) s += '<path d="' + line + ' L' + X(n - 1) + ',' + Y(0) + ' L' + X(0) + ',' + Y(0) + ' Z" fill="url(#' + uid + k + ')"/>';
+      s += '<path d="' + line + '" fill="none" stroke="' + se.color + '" stroke-width="2" stroke-linecap="round"/>';
+    });
+    s += '<line class="vline" x1="0" x2="0" y1="' + padT + '" y2="' + (padT + ih) + '" stroke="#8A94C4" stroke-dasharray="3 4" opacity="0"/>';
+    cfg.series.forEach(se => { s += '<circle class="dot" r="4.5" fill="#0D1436" stroke="' + se.color + '" stroke-width="2" opacity="0"/>'; });
+    s += '<rect class="hit" x="' + padL + '" y="' + padT + '" width="' + iw + '" height="' + ih + '" fill="transparent"/></svg><div class="chart-tip" hidden></div>';
+    el.innerHTML = s;
+    const svg = $('svg', el), tip = $('.chart-tip', el), vline = $('.vline', el), dots = $$('.dot', el);
+    const move = ev => {
+      const r = svg.getBoundingClientRect(), px = (ev.clientX - r.left) * (W / r.width);
+      const i = Math.max(0, Math.min(n - 1, Math.round(((px - padL) / iw) * (n - 1))));
+      vline.setAttribute('x1', X(i)); vline.setAttribute('x2', X(i)); vline.setAttribute('opacity', '1');
+      let topY = H;
+      cfg.series.forEach((se, k) => { const yy = Y(se.values[i]); dots[k].setAttribute('cx', X(i)); dots[k].setAttribute('cy', yy); dots[k].setAttribute('opacity', '1'); topY = Math.min(topY, yy); });
+      tip.innerHTML = '<b>' + esc(cfg.tipLabels ? cfg.tipLabels[i] : cfg.labels[i]) + '</b>' + cfg.series.map(se => '<div class="tip-row"><i style="background:' + se.color + '"></i>' + esc(se.name) + '<b>' + esc((cfg.tipFmt || fmt)(se.values[i])) + '</b></div>').join('');
+      tip.hidden = false;
+      tip.style.left = Math.max(80, Math.min(r.width - 80, X(i) * (r.width / W))) + 'px';
+      tip.style.top = (topY * (r.height / H)) + 'px';
+    };
+    const leave = () => { tip.hidden = true; vline.setAttribute('opacity', '0'); dots.forEach(d => d.setAttribute('opacity', '0')); };
+    const hit = $('.hit', el); hit.addEventListener('pointermove', move); hit.addEventListener('pointerdown', move); hit.addEventListener('pointerleave', leave);
+  };
+  draw();
+  window.addEventListener('resize', debounce(draw, 150));
+}
+function barChart(el, cfg) {
+  const draw = () => {
+    const W = Math.max(240, Math.round(el.clientWidth || 400)), H = cfg.height || 150, padL = 6, padR = 6, padT = 8, padB = 22;
+    const iw = W - padL - padR, ih = H - padT - padB, n = cfg.values.length, max = Math.max(1, ...cfg.values);
+    const slot = iw / n, bw = Math.max(2, Math.min(7, slot * 0.42));
+    let s = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + esc(cfg.aria || 'Bar chart') + '"><line class="grid" x1="' + padL + '" x2="' + (W - padR) + '" y1="' + (padT + ih) + '" y2="' + (padT + ih) + '"/>';
+    cfg.values.forEach((v, i) => {
+      const h = v > 0 ? Math.max(3, (v / max) * ih) : 2, x = padL + slot * i + (slot - bw) / 2;
+      s += '<rect x="' + x.toFixed(1) + '" y="' + (padT + ih - h).toFixed(1) + '" width="' + bw.toFixed(1) + '" height="' + h.toFixed(1) + '" rx="1.5" fill="' + (v > 0 ? cfg.colors[i % cfg.colors.length] : '#26336B') + '"><title>' + esc(cfg.labels[i] + ': ' + v) + '</title></rect>';
+    });
+    [0, Math.floor((n - 1) / 2), n - 1].forEach(i => { s += '<text x="' + (padL + slot * i + slot / 2) + '" y="' + (H - 6) + '" text-anchor="middle">' + esc(cfg.labels[i]) + '</text>'; });
+    el.innerHTML = s + '</svg>';
+  };
+  draw();
+  window.addEventListener('resize', debounce(draw, 150));
+}
+
+// ---------- shell ----------
+function initShell() {
+  const c = Auth.cred(), name = (c && c.name) || 'Owner';
+  $$('[data-admin-name]').forEach(el => { el.textContent = name; });
+  const av = $('#adminAvatar'); if (av) av.textContent = initials(name);
+  const so = $('#signOutBtn'); if (so) so.addEventListener('click', () => { Auth.logout(); location.href = 'admin-login.html'; });
+  const sb = $('#sidebar'), mb = $('#menuBtn');
+  if (mb) mb.addEventListener('click', () => sb.classList.toggle('open'));
+  document.addEventListener('click', e => { if (window.innerWidth <= 900 && sb.classList.contains('open') && !e.target.closest('#sidebar') && !e.target.closest('#menuBtn')) sb.classList.remove('open'); });
+  const ss = $('#sideSearch'); if (ss) ss.addEventListener('submit', e => { e.preventDefault(); const q = $('input', ss).value.trim(); location.href = 'admin-orders.html' + (q ? '?q=' + encodeURIComponent(q) : ''); });
+  let last = 0;
+  ['click', 'keydown', 'mousemove', 'touchstart'].forEach(ev => document.addEventListener(ev, () => { const n = Date.now(); if (n - last > 20000) { last = n; Auth.touch(); } }, { passive: true }));
+  setInterval(() => { if (!Auth.isAuthed()) location.replace('admin-login.html'); }, 15000);
+}
+
+// ---------- dashboard ----------
+const ICON = {
+  rev: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 6H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>',
+  cart: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h2l2.4 12.4a2 2 0 0 0 2 1.6h8.4a2 2 0 0 0 2-1.6L22 7H6"/><circle cx="9" cy="21" r="1"/><circle cx="18" cy="21" r="1"/></svg>',
+  user: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>',
+  mail: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>'
+};
+function initDashboard() {
+  const { sample, list } = Data.orders();
+  const banner = $('#sampleBanner'); banner.hidden = !sample;
+  const now = Date.now(), ok = live(list);
+  const inR = (o, a, b) => { const t = new Date(o.date).getTime(); return t >= a && t < b; };
+  const rev = (a, b) => ok.filter(o => inR(o, a, b)).reduce((s, o) => s + o.total, 0);
+  const cnt = (a, b) => ok.filter(o => inR(o, a, b)).length;
+  const first = {};
+  list.forEach(o => { const k = (o.customerEmail || o.customerName).toLowerCase(), t = new Date(o.date).getTime(); if (!(k in first) || t < first[k]) first[k] = t; });
+  const newCust = (a, b) => Object.values(first).filter(t => t >= a && t < b).length;
+  const news = Data.newsletter();
+  const kpis = [
+    { label: 'Revenue · 30d', icon: ICON.rev, value: inr(rev(now - 30 * DAY, now + 1)), d: pctChange(rev(now - 30 * DAY, now + 1), rev(now - 60 * DAY, now - 30 * DAY)) },
+    { label: 'Orders · 30d', icon: ICON.cart, value: String(cnt(now - 30 * DAY, now + 1)), d: pctChange(cnt(now - 30 * DAY, now + 1), cnt(now - 60 * DAY, now - 30 * DAY)) },
+    { label: 'New customers · 30d', icon: ICON.user, value: String(newCust(now - 30 * DAY, now + 1)), d: pctChange(newCust(now - 30 * DAY, now + 1), newCust(now - 60 * DAY, now - 30 * DAY)) },
+    { label: 'Subscribers', icon: ICON.mail, value: String(news.list.length), d: news.sample ? 11.3 : null }
+  ];
+  $('#kpiGrid').innerHTML = kpis.map(k => '<div class="kpi"><div class="kpi-top"><span>' + k.icon + esc(k.label) + '</span><span class="kpi-dots">···</span></div><div class="kpi-value">' + esc(k.value) + deltaChip(k.d) + '</div></div>').join('');
+
+  // 12-month revenue
+  const nowD = new Date(), months = [];
+  for (let i = 11; i >= 0; i--) { const d = new Date(nowD.getFullYear(), nowD.getMonth() - i, 1); months.push({ a: d.getTime(), b: new Date(d.getFullYear(), d.getMonth() + 1, 1).getTime(), label: d.toLocaleString('en-US', { month: 'short' }), full: d.toLocaleString('en-US', { month: 'long', year: 'numeric' }) }); }
+  const revArr = months.map(m => rev(m.a, m.b));
+  const r2 = rng(5);
+  const second = sample ? revArr.map(v => Math.round(v * (0.5 + r2() * 0.18))) : months.map(m => ok.filter(o => inR(o, m.a, m.b)).reduce((s, o) => s + o.discount, 0));
+  const secondName = sample ? 'Expenses' : 'Discounts given';
+  const total12 = revArr.reduce((a, b) => a + b, 0), prev12 = rev(months[0].a - 365 * DAY, months[0].a);
+  $('#revValue').textContent = inr(total12);
+  $('#revDelta').innerHTML = deltaChip(pctChange(total12, prev12));
+  $('#revLegend').innerHTML = '<span><i style="background:#C03CFF"></i>Revenue</span><span><i style="background:#1CC8F5"></i>' + secondName + '</span><span>' + esc(months[0].label) + ' – ' + esc(months[11].label) + '</span>';
+
+  // last 30 days: orders + items sold
+  const d0 = new Date(); d0.setHours(0, 0, 0, 0);
+  const dayStart = i => d0.getTime() - (29 - i) * DAY;
+  const ordDay = [], itemDay = [], dayLabels = [];
+  for (let i = 0; i < 30; i++) {
+    const a = dayStart(i), b = a + DAY, inDay = ok.filter(o => inR(o, a, b));
+    ordDay.push(inDay.length); itemDay.push(inDay.reduce((s, o) => s + o.items.reduce((q, x) => q + x.qty, 0), 0));
+    dayLabels.push(new Date(a).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }));
+  }
+  $('#ordValue').textContent = ordDay.reduce((a, b) => a + b, 0);
+  barChart($('#ordBars'), { values: ordDay, labels: dayLabels, colors: ['#C03CFF', '#1CC8F5'], height: 150, aria: 'Orders per day, last 30 days' });
+  $('#itemsValue').textContent = itemDay.reduce((a, b) => a + b, 0);
+  lineChart($('#itemsLine'), { height: 150, compact: true, labels: dayLabels, aria: 'Items sold per day', series: [{ name: 'Items sold', color: '#C03CFF', values: itemDay, fill: true }], yFmt: v => String(Math.round(v)), tipFmt: v => String(v) });
+
+  // revenue chart: on wide screens, grow to match the height of the two panels beside it (no empty space under it)
+  const revHeight = () => {
+    if (window.innerWidth <= 1100) return 320;
+    const kids = Array.from($('.panel-col').children);
+    const right = kids.reduce((t, k) => t + k.offsetHeight, 0) + 16 * (kids.length - 1);
+    return Math.max(320, Math.round(right - 40 - $('#revChart').closest('.panel').querySelector('.panel-head').offsetHeight - 12));
+  };
+  lineChart($('#revChart'), { height: revHeight, labels: months.map(m => m.label), tipLabels: months.map(m => m.full), aria: 'Revenue by month', yFmt: v => '₹' + compact(v), tipFmt: inr,
+    series: [{ name: 'Revenue', color: '#C03CFF', values: revArr }, { name: secondName, color: '#1CC8F5', values: second, fill: true }] });
+
+  // recent orders + low stock
+  $('#recentBody').innerHTML = list.slice(0, 6).map(o => '<tr><td><b>' + esc(o.number) + '</b></td><td class="hide-xs">' + esc(o.customerName) + '</td><td class="hide-sm">' + fmtDate(o.date) + '</td><td class="num">' + inr(o.total) + '</td><td><span class="badge ' + STATUS_BADGE[o.status] + '">' + esc(o.status) + '</span></td></tr>').join('');
+  const low = Data.catalog().filter(p => p.stockQty <= 5).sort((a, b) => a.stockQty - b.stockQty).slice(0, 6);
+  $('#lowStock').innerHTML = low.length ? low.map(p => '<div class="low-item"><div class="cell-prod"><img src="' + esc(p.img) + '" alt=""><div><div class="nm">' + esc(p.name) + '</div><div class="sb">' + esc(p.brand) + '</div></div></div>' + stockBadge(p.stockQty) + '</div>').join('') : '<div class="empty">Everything is well stocked.</div>';
+
+  $('#exportBtn').addEventListener('click', () => { ordersToCSV(list, 'orders' + (sample ? '-sample' : '') + '.csv'); toast('Orders exported'); });
+  $('#reportBtn').addEventListener('click', () => window.print());
+}
+function ordersToCSV(list, name) {
+  download(name, toCSV([['Order', 'Date', 'Customer', 'Email', 'Items', 'Subtotal', 'Discount', 'Shipping', 'Tax', 'Total', 'Payment', 'Status']]
+    .concat(list.map(o => [o.number, new Date(o.date).toISOString().slice(0, 10), o.customerName, o.customerEmail, o.items.reduce((s, i) => s + i.qty, 0), o.subtotal, o.discount, o.shipping, o.tax, o.total, paymentLabel(o.paymentMethod), o.status]))), 'text/csv');
+}
+
+// ---------- orders ----------
+function initOrders() {
+  const { sample, list } = Data.orders();
+  $('#sampleBanner').hidden = !sample;
+  const params = new URLSearchParams(location.search);
+  const state = { q: params.get('q') || '', status: STATUSES.includes(params.get('status')) ? params.get('status') : 'All' };
+  const qEl = $('#oq'), sEl = $('#ostatus');
+  qEl.value = state.q; sEl.value = state.status;
+  const statusSelect = o => '<select class="in" style="min-width:128px;padding:6px 28px 6px 10px;font-size:12px" data-status="' + esc(o.number) + '" aria-label="Status for ' + esc(o.number) + '">' + STATUSES.map(s => '<option' + (s === o.status ? ' selected' : '') + '>' + s + '</option>').join('') + '</select>';
+  const filtered = () => list.filter(o => (state.status === 'All' || o.status === state.status) &&
+    (!state.q || (o.number + ' ' + o.customerName + ' ' + o.customerEmail + ' ' + o.items.map(i => i.name).join(' ')).toLowerCase().includes(state.q.toLowerCase())));
+  const render = () => {
+    const counts = { All: list.length }; STATUSES.forEach(s => { counts[s] = list.filter(o => o.status === s).length; });
+    $('#opills').innerHTML = ['All'].concat(STATUSES).map(s => '<button class="pill' + (state.status === s ? ' active' : '') + '" data-pill="' + s + '">' + s + '<b>' + counts[s] + '</b></button>').join('');
+    const rows = filtered();
+    $('#obody').innerHTML = rows.length ? rows.map(o => '<tr><td><b>' + esc(o.number) + '</b></td><td>' + fmtDate(o.date) + '</td><td><div class="nm">' + esc(o.customerName) + '</div><div class="muted" style="font-size:11.5px">' + esc(o.customerEmail) + '</div></td><td>' + o.items.reduce((s, i) => s + i.qty, 0) + '</td><td class="num"><b>' + inr(o.total) + '</b></td><td>' + esc(paymentLabel(o.paymentMethod)) + '</td><td>' + statusSelect(o) + '</td><td class="num"><button class="btn outline sm" data-view="' + esc(o.number) + '">View</button></td></tr>').join('')
+      : '<tr><td colspan="8"><div class="empty">No orders match your filters.</div></td></tr>';
+    $('#ocount').textContent = rows.length + ' of ' + list.length + ' orders';
+  };
+  qEl.addEventListener('input', () => { state.q = qEl.value.trim(); render(); });
+  sEl.addEventListener('change', () => { state.status = sEl.value; render(); });
+  $('#opills').addEventListener('click', e => { const b = e.target.closest('[data-pill]'); if (!b) return; state.status = b.dataset.pill; sEl.value = state.status; render(); });
+  $('#obody').addEventListener('change', e => {
+    const sel = e.target.closest('[data-status]'); if (!sel) return;
+    const o = list.find(x => x.number === sel.dataset.status); if (!o) return;
+    o.status = sel.value; Data.setStatus(o.number, o.status); toast(o.number + ' marked ' + o.status); render();
+  });
+  $('#obody').addEventListener('click', e => {
+    const b = e.target.closest('[data-view]'); if (!b) return;
+    const o = list.find(x => x.number === b.dataset.view); if (!o) return;
+    openModal({ title: 'Order ' + o.number, wide: true,
+      body: '<div class="row2" style="margin-bottom:16px"><div><div class="muted" style="font-size:12px">Customer</div><div><b>' + esc(o.customerName) + '</b></div><div class="muted">' + esc(o.customerEmail || 'no email') + '</div></div><div><div class="muted" style="font-size:12px">Placed</div><div><b>' + fmtDate(o.date) + '</b></div><div class="muted">' + esc(paymentLabel(o.paymentMethod)) + '</div></div></div>' +
+        '<div class="table-wrap"><table style="min-width:0"><thead><tr><th>Item</th><th class="num">Qty</th><th class="num">Price</th><th class="num">Total</th></tr></thead><tbody>' +
+        o.items.map(i => '<tr><td>' + esc(i.name) + '</td><td class="num">' + i.qty + '</td><td class="num">' + inr(i.price) + '</td><td class="num">' + inr(i.price * i.qty) + '</td></tr>').join('') + '</tbody></table></div>' +
+        '<div style="margin-top:12px"><div class="sum-row"><span>Subtotal</span><span>' + inr(o.subtotal) + '</span></div>' + (o.discount ? '<div class="sum-row"><span>Discount</span><span>−' + inr(o.discount) + '</span></div>' : '') + '<div class="sum-row"><span>Shipping</span><span>' + (o.shipping ? inr(o.shipping) : 'Free') + '</span></div><div class="sum-row"><span>GST</span><span>' + inr(o.tax) + '</span></div><div class="sum-row total"><span>Total</span><span>' + inr(o.total) + '</span></div></div>',
+      footer: '<span class="muted" style="margin-right:auto;font-size:12px">Status</span><select class="in" style="width:auto" id="mstatus">' + STATUSES.map(s => '<option' + (s === o.status ? ' selected' : '') + '>' + s + '</option>').join('') + '</select><button class="btn primary" data-close>Done</button>',
+      onMount: ({ foot, close }) => {
+        $('#mstatus', foot).addEventListener('change', ev => { o.status = ev.target.value; Data.setStatus(o.number, o.status); toast(o.number + ' marked ' + o.status); render(); });
+        $('[data-close]', foot).addEventListener('click', close);
+      } });
+  });
+  $('#exportBtn').addEventListener('click', () => { ordersToCSV(filtered(), 'orders' + (sample ? '-sample' : '') + '.csv'); toast('Exported ' + filtered().length + ' orders'); });
+  render();
+}
+
+// ---------- products ----------
+const slugify = s => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 48) || 'product';
+function initProducts() {
+  let list = Data.catalog();
+  const params = new URLSearchParams(location.search);
+  const state = { q: '', cat: 'All', stock: params.get('stock') === 'low' ? 'low' : 'All' };
+  const catSel = $('#pcat'), stockSel = $('#pstock'), qEl = $('#pq');
+  const fillCats = () => { catSel.innerHTML = '<option value="All">All categories</option>' + Data.categories().map(c => '<option>' + esc(c) + '</option>').join(''); catSel.value = state.cat; };
+  fillCats(); stockSel.value = state.stock;
+  const filtered = () => list.filter(p => (state.cat === 'All' || p.cat === state.cat) &&
+    (state.stock === 'All' || (state.stock === 'low' ? p.stockQty <= 5 && p.stockQty > 0 : state.stock === 'out' ? p.stockQty <= 0 : p.stockQty > 5)) &&
+    (!state.q || (p.name + ' ' + p.brand + ' ' + p.cat).toLowerCase().includes(state.q.toLowerCase())));
+  const persist = () => { Data.saveCatalog(list); };
+  const render = () => {
+    const rows = filtered();
+    $('#pbody').innerHTML = rows.length ? rows.map(p => '<tr><td><div class="cell-prod"><img src="' + esc(p.img) + '" alt=""><div><div class="nm">' + esc(p.name) + '</div><div class="sb">' + esc(p.brand) + '</div></div></div></td><td>' + esc(p.cat) + '</td><td class="num"><b>' + inr(p.price) + '</b><div class="muted" style="font-size:11px;text-decoration:line-through">' + inr(p.was) + '</div></td><td>' + stockBadge(p.stockQty) + '</td><td>' + (+p.rating).toFixed(1) + ' <span class="muted">(' + (p.reviewCount || 0) + ')</span></td><td class="num" style="white-space:nowrap"><button class="btn outline sm" data-edit="' + esc(p.id) + '">Edit</button> <button class="btn danger sm" data-del="' + esc(p.id) + '">Delete</button></td></tr>').join('')
+      : '<tr><td colspan="6"><div class="empty">No products match your filters.</div></td></tr>';
+    $('#pcount').textContent = rows.length + ' of ' + list.length + ' products';
+    $('#editedNote').hidden = !Data.hasCatalogEdits();
+  };
+  qEl.addEventListener('input', () => { state.q = qEl.value.trim(); render(); });
+  catSel.addEventListener('change', () => { state.cat = catSel.value; render(); });
+  stockSel.addEventListener('change', () => { state.stock = stockSel.value; render(); });
+
+  const form = p => {
+    const v = p || { name: '', brand: '', cat: Data.categories()[0] || '', price: '', was: '', stockQty: 10, rating: 4.5, reviewCount: 0, img: '', desc: '' };
+    return '<div class="field"><label for="fName">Product name</label><input class="in" id="fName" value="' + esc(v.name) + '"><div class="err" data-err="name"></div></div>' +
+      '<div class="row2"><div class="field"><label for="fBrand">Brand</label><input class="in" id="fBrand" value="' + esc(v.brand) + '"><div class="err" data-err="brand"></div></div>' +
+      '<div class="field"><label for="fCat">Category</label><input class="in" id="fCat" list="catList" value="' + esc(v.cat) + '"><datalist id="catList">' + Data.categories().map(c => '<option value="' + esc(c) + '">').join('') + '</datalist><div class="hint">Pick one or type a new category.</div><div class="err" data-err="cat"></div></div></div>' +
+      '<div class="row3"><div class="field"><label for="fPrice">Price (₹)</label><input class="in" id="fPrice" inputmode="numeric" value="' + esc(v.price) + '"><div class="err" data-err="price"></div></div>' +
+      '<div class="field"><label for="fWas">Original price (₹)</label><input class="in" id="fWas" inputmode="numeric" value="' + esc(v.was) + '"><div class="err" data-err="was"></div></div>' +
+      '<div class="field"><label for="fStock">Stock quantity</label><input class="in" id="fStock" inputmode="numeric" value="' + esc(v.stockQty) + '"><div class="err" data-err="stock"></div></div></div>' +
+      '<div class="row2"><div class="field"><label for="fRating">Rating (0–5)</label><input class="in" id="fRating" inputmode="decimal" value="' + esc(v.rating) + '"><div class="err" data-err="rating"></div></div>' +
+      '<div class="field"><label for="fReviews">Number of reviews</label><input class="in" id="fReviews" inputmode="numeric" value="' + esc(v.reviewCount) + '"><div class="err" data-err="reviews"></div></div></div>' +
+      '<div class="field"><label for="fImg">Image URL</label><input class="in" id="fImg" value="' + esc(v.img) + '" placeholder="https://…"><div class="err" data-err="img"></div></div>' +
+      '<div class="field"><label for="fDesc">Description</label><textarea class="in" id="fDesc" maxlength="220">' + esc(v.desc) + '</textarea></div>';
+  };
+  const validate = root => {
+    const g = id => $('#' + id, root).value.trim(), errs = {};
+    const name = g('fName'), brand = g('fBrand'), cat = g('fCat'), img = g('fImg');
+    const price = Number(g('fPrice')), was = g('fWas') === '' ? NaN : Number(g('fWas')), stock = Number(g('fStock')), rating = Number(g('fRating')), reviews = g('fReviews') === '' ? 0 : Number(g('fReviews'));
+    if (name.length < 3) errs.name = 'Enter a product name (3+ characters).';
+    if (!brand) errs.brand = 'Enter a brand.';
+    if (!cat) errs.cat = 'Choose or type a category.';
+    if (!(price > 0) || !Number.isInteger(price)) errs.price = 'Enter a whole-number price above 0.';
+    if (g('fWas') !== '' && (!(was >= price))) errs.was = 'Must be the same as or higher than the price.';
+    if (!Number.isInteger(stock) || stock < 0 || g('fStock') === '') errs.stock = 'Enter a whole number, 0 or more.';
+    if (!(rating >= 0 && rating <= 5) || g('fRating') === '') errs.rating = 'Enter a rating from 0 to 5.';
+    if (!Number.isInteger(reviews) || reviews < 0) errs.reviews = 'Enter a whole number, 0 or more.';
+    if (img && !/^https?:\/\//i.test(img)) errs.img = 'Image link must start with http:// or https://';
+    return { errs, value: { name, brand, cat, price, was: isNaN(was) ? Math.round(price * 1.15) : was, stockQty: stock, rating: Math.round(rating * 10) / 10, reviewCount: reviews, img, desc: $('#fDesc', root).value.trim() } };
+  };
+  const openForm = existing => {
+    openModal({ title: existing ? 'Edit product' : 'Add product', wide: true, body: form(existing),
+      footer: '<button class="btn outline" data-cancel>Cancel</button><button class="btn primary" data-save>' + (existing ? 'Save changes' : 'Add product') + '</button>',
+      onMount: ({ body, foot, close }) => {
+        $('#fName', body).focus();
+        $('[data-cancel]', foot).addEventListener('click', close);
+        $('[data-save]', foot).addEventListener('click', () => {
+          const { errs, value } = validate(body);
+          $$('[data-err]', body).forEach(el => { el.textContent = errs[el.dataset.err] || ''; });
+          $$('.in', body).forEach(el => el.classList.remove('bad'));
+          const map = { name: 'fName', brand: 'fBrand', cat: 'fCat', price: 'fPrice', was: 'fWas', stock: 'fStock', rating: 'fRating', reviews: 'fReviews', img: 'fImg' };
+          Object.keys(errs).forEach(k => $('#' + map[k], body).classList.add('bad'));
+          if (Object.keys(errs).length) { $('#' + map[Object.keys(errs)[0]], body).focus(); return; }
+          if (existing) {
+            const i = list.findIndex(p => p.id === existing.id);
+            const img = value.img || existing.img;
+            list[i] = { ...existing, ...value, img, gallery: existing.img === img ? existing.gallery : [img, img, img] };
+            toast('Saved ' + value.name);
+          } else {
+            let id = slugify(value.name), k = 2; while (list.some(p => p.id === id)) id = slugify(value.name) + '-' + k++;
+            const img = value.img || 'https://codervent.com/fobia/demo/ltr/assets/images/products/12.png';
+            list.unshift({ id, ...value, img, gallery: [img, img, img] });
+            toast('Added ' + value.name);
+          }
+          persist(); fillCats(); render(); close();
+        });
+      } });
+  };
+  $('#addBtn').addEventListener('click', () => openForm(null));
+  $('#pbody').addEventListener('click', async e => {
+    const ed = e.target.closest('[data-edit]'), de = e.target.closest('[data-del]');
+    if (ed) openForm(list.find(p => p.id === ed.dataset.edit));
+    if (de) {
+      const p = list.find(x => x.id === de.dataset.del);
+      if (await confirmDialog('Delete "' + p.name + '" from the product list? You can bring everything back with "Reset to store defaults".', 'Delete product')) {
+        list = list.filter(x => x.id !== p.id); persist(); fillCats(); render(); toast('Deleted ' + p.name);
+      }
+    }
+  });
+  $('#exportBtn').addEventListener('click', () => { download('rk-products.json', JSON.stringify(list, null, 2), 'application/json'); toast('Exported ' + list.length + ' products'); });
+  $('#resetBtn').addEventListener('click', async () => {
+    if (await confirmDialog('Discard all product changes made in this admin and go back to the products currently on your store?', 'Reset products', true)) { Data.resetCatalog(); list = Data.catalog(); state.cat = 'All'; fillCats(); render(); toast('Back to store defaults'); }
+  });
+  render();
+}
+
+// ---------- customers ----------
+function initCustomers() {
+  const orders = Data.orders(), notify = Data.notifyRequests();
+  const tabs = $$('.tab'), panes = { customers: $('#tabCustomers'), news: $('#tabNews'), notify: $('#tabNotify') };
+  const sampleNote = '<div class="banner" style="margin-bottom:14px"><span>Showing sample data. Nothing real has been collected in this browser yet.</span></div>';
+  const byCust = {};
+  orders.list.forEach(o => { const k = (o.customerEmail || o.customerName).toLowerCase(); (byCust[k] = byCust[k] || { name: o.customerName, email: o.customerEmail, orders: 0, spent: 0, last: 0 }); const c = byCust[k]; c.orders++; if (o.status !== 'Cancelled') c.spent += o.total; c.last = Math.max(c.last, new Date(o.date).getTime()); });
+  const custs = Object.values(byCust).sort((a, b) => b.spent - a.spent);
+  const draw = () => {
+    panes.customers.innerHTML = (orders.sample ? sampleNote : '') + '<div class="table-wrap"><table><thead><tr><th>Customer</th><th class="num">Orders</th><th class="num">Total spent</th><th>Last order</th></tr></thead><tbody>' +
+      (custs.length ? custs.map(c => '<tr><td><div class="nm"><b>' + esc(c.name) + '</b></div><div class="muted" style="font-size:11.5px">' + esc(c.email || 'no email') + '</div></td><td class="num">' + c.orders + '</td><td class="num"><b>' + inr(c.spent) + '</b></td><td>' + fmtDate(c.last) + '</td></tr>').join('') : '<tr><td colspan="4"><div class="empty">No customers yet.</div></td></tr>') + '</tbody></table></div>';
+    const nl = Data.newsletter();
+    panes.news.innerHTML = (nl.sample ? sampleNote : '') + '<div class="table-wrap"><table><thead><tr><th>Email</th><th class="num"></th></tr></thead><tbody>' +
+      (nl.list.length ? nl.list.map(em => '<tr><td>' + esc(em) + '</td><td class="num">' + (nl.sample ? '' : '<button class="btn danger sm" data-unsub="' + esc(em) + '">Remove</button>') + '</td></tr>').join('') : '<tr><td colspan="2"><div class="empty">No subscribers yet.</div></td></tr>') + '</tbody></table></div>';
+    panes.notify.innerHTML = (notify.sample ? sampleNote : '') + '<div class="table-wrap"><table><thead><tr><th>Product</th><th>Email</th><th>Requested</th></tr></thead><tbody>' +
+      (notify.list.length ? notify.list.map(n => { const p = DEFAULT_CATALOG.find(x => x.id === n.productId); return '<tr><td>' + esc(p ? p.name : n.productId) + '</td><td>' + esc(n.email) + '</td><td>' + fmtDate(n.date) + '</td></tr>'; }).join('') : '<tr><td colspan="3"><div class="empty">No restock requests yet.</div></td></tr>') + '</tbody></table></div>';
+  };
+  let active = 'customers';
+  const show = k => { active = k; tabs.forEach(t => t.classList.toggle('active', t.dataset.tab === k)); Object.keys(panes).forEach(p => { panes[p].hidden = p !== k; }); };
+  tabs.forEach(t => t.addEventListener('click', () => show(t.dataset.tab)));
+  panes.news.addEventListener('click', async e => {
+    const b = e.target.closest('[data-unsub]'); if (!b) return;
+    if (await confirmDialog('Remove ' + b.dataset.unsub + ' from the newsletter list?', 'Remove', true)) {
+      store.set('cf_newsletter', store.get('cf_newsletter', []).filter(x => x !== b.dataset.unsub)); draw(); toast('Subscriber removed');
+    }
+  });
+  $('#exportBtn').addEventListener('click', () => {
+    if (active === 'news') download('newsletter.csv', toCSV([['Email']].concat(Data.newsletter().list.map(e => [e]))), 'text/csv');
+    else if (active === 'notify') download('restock-requests.csv', toCSV([['Product', 'Email', 'Requested']].concat(notify.list.map(n => { const p = DEFAULT_CATALOG.find(x => x.id === n.productId); return [p ? p.name : n.productId, n.email, new Date(n.date).toISOString().slice(0, 10)]; }))), 'text/csv');
+    else download('customers.csv', toCSV([['Name', 'Email', 'Orders', 'Total spent', 'Last order']].concat(custs.map(c => [c.name, c.email, c.orders, c.spent, new Date(c.last).toISOString().slice(0, 10)]))), 'text/csv');
+    toast('Exported');
+  });
+  draw(); show('customers');
+}
+
+// ---------- settings ----------
+function initSettings() {
+  const c = Auth.cred();
+  $('#setName').value = c ? c.name : 'Owner';
+  $('#nameForm').addEventListener('submit', e => { e.preventDefault(); Auth.rename($('#setName').value); $$('[data-admin-name]').forEach(el => { el.textContent = Auth.cred().name; }); const av = $('#adminAvatar'); if (av) av.textContent = initials(Auth.cred().name); toast('Name updated'); });
+  $('#pwForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const o = $('#pwOld').value, n = $('#pwNew').value, n2 = $('#pwNew2').value, err = $('#pwErr');
+    const fail = m => { err.textContent = m; err.hidden = false; };
+    if (!o) return fail('Enter your current password.');
+    const w = weakPassword(n); if (w) return fail(w);
+    if (n !== n2) return fail('The new passwords do not match.');
+    if (n === o) return fail('Choose a password different from the current one.');
+    if (!Auth.changePassword(o, n)) return fail('Your current password is incorrect.');
+    err.hidden = true; $('#pwForm').reset(); toast('Password changed');
+  });
+  $('#signOutNow').addEventListener('click', () => { Auth.logout(); location.href = 'admin-login.html'; });
+  $('#clearAdminData').addEventListener('click', async () => {
+    if (await confirmDialog('This clears order statuses and product edits saved by this admin in this browser. Your password stays. Store orders, cart and wishlist are not touched.', 'Clear admin data')) {
+      Data.resetCatalog(); store.del('rk_admin_order_status'); toast('Admin data cleared');
+    }
+  });
+  $('#kvSession').textContent = Math.round(Auth.TTL / 60000) + ' minutes of inactivity';
+  $('#kvLock').textContent = Auth.MAX_FAILS + ' wrong tries → locked ' + Math.round(Auth.LOCK_MS / 60000) + ' minutes';
+}
+
+// ---------- login ----------
+function initLogin() {
+  if (Auth.isAuthed()) { location.replace('admin.html'); return; }
+  const setup = !Auth.isSetup();
+  $('#loginTitle').textContent = setup ? 'Create your owner password' : 'Sign in';
+  $('#loginSub').textContent = setup ? 'First time here. Choose your name and a strong password for this admin.' : 'Enter your owner password to continue.';
+  $('#nameField').hidden = !setup; $('#confirmField').hidden = !setup; $('#forgotBtn').hidden = setup;
+  $('#loginBtn').textContent = setup ? 'Create password & enter' : 'Sign in';
+  const form = $('#loginForm'), err = $('#loginErr'), pw = $('#pw'), btn = $('#loginBtn');
+  const showErr = m => { err.textContent = m; err.hidden = false; };
+  const go = () => { const next = new URLSearchParams(location.search).get('next'); location.replace(ADMIN_PAGES.includes(next) ? next : 'admin.html'); };
+  let timer;
+  const tickLock = () => {
+    const rem = Auth.lockRemaining();
+    if (rem > 0) { const s = Math.ceil(rem / 1000); showErr('Too many wrong attempts. Try again in ' + Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0') + '.'); pw.disabled = true; btn.disabled = true; timer = setTimeout(tickLock, 1000); }
+    else { if (pw.disabled) { err.hidden = true; } pw.disabled = false; btn.disabled = false; }
+  };
+  if (!setup) tickLock();
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    if (setup) {
+      const w = weakPassword(pw.value); if (w) return showErr(w);
+      if (pw.value !== $('#pw2').value) return showErr('The two passwords do not match.');
+      Auth.setup($('#adminNameIn').value, pw.value); go();
+    } else {
+      const r = Auth.login(pw.value);
+      if (r.ok) return go();
+      if (r.locked) { clearTimeout(timer); return tickLock(); }
+      pw.value = ''; pw.focus();
+      showErr('Incorrect password. ' + r.left + ' attempt' + (r.left === 1 ? '' : 's') + ' left before a 5-minute lock.');
+    }
+  });
+  $('#forgotBtn').addEventListener('click', () => { const h = $('#forgotHelp'); h.hidden = !h.hidden; });
+}
+
+// ---------- boot ----------
+document.addEventListener('DOMContentLoaded', () => {
+  const page = document.body.dataset.page;
+  if (page === 'login') { initLogin(); return; }
+  if (!Auth.isAuthed()) { location.replace('admin-login.html?next=' + encodeURIComponent(currentFile())); return; }
+  Auth.touch(); initShell();
+  const init = { dashboard: initDashboard, orders: initOrders, products: initProducts, customers: initCustomers, settings: initSettings }[page];
+  try { if (init) init(); } finally { const g = document.getElementById('authGate'); if (g) g.remove(); }
+});
+</script>
+</body>
+</html>
